@@ -1,7 +1,8 @@
+import { useState } from 'react';
 import './weatherCard.css';
 import { WiBarometer, WiWindy, WiHumidity } from 'react-icons/wi';
-import { useState } from 'react';
 import backgrounds from './backgroundArray';
+import SoundArray from '../backgroundSoundArray/SoundArray';
 
 function WeatherCard(props) {
   const { results } = props;
@@ -22,17 +23,59 @@ function WeatherCard(props) {
     onUnitsChanged(units);
   };
 
+  console.log(cardBackground);
+
+  const arr = {
+    Clear: SoundArray.morning,
+    Rain: SoundArray.Rain,
+    Drizzle: SoundArray.sunrise,
+    Haze: SoundArray.sunrise,
+    Mist: SoundArray.wind,
+    Smoke: SoundArray.wind,
+    Dust: SoundArray.wind,
+    Sand: SoundArray.wind,
+    Fog: SoundArray.wind,
+    Ash: SoundArray.Rain,
+    Squall: SoundArray.Rain,
+    Tornado: SoundArray.thunder,
+    Clouds: SoundArray.thunder,
+    Snow: SoundArray.wind,
+    Thunderstorm: SoundArray.thunder,
+  };
+
+  const playAudio = () => {
+    const aud = new Audio(arr[`${cardBackground}`]);
+
+    console.log(`arr[${cardBackground}]`);
+    aud.play();
+
+    setTimeout(() => {
+      aud.pause();
+    }, 10000);
+  };
+
   return (
     <div className="weather-card" id="tell-weather">
       <div className="content">
         <div className="place">
           {results.name}, {results.sys.country}
         </div>
+
         <div className="top-info">
           <div className="temp">{results.main.temp}°</div>
           <div className="conditions">
             <div className="forecast">
-              {results.weather[0].main} {backgrounds[cardBackground][1]}
+              {results.weather[0].main}{' '}
+              <button
+                style={{ cursor: 'pointer' }}
+                className="playButton"
+                type="button"
+                onClick={playAudio}
+                alt=""
+                title="Play Background Music"
+              >
+                {backgrounds[cardBackground][1]}
+              </button>
             </div>
             <div className="temp-feel">
               Feels like {results.main.feels_like}°
